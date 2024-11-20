@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.Scanner;
-import java.util.Random;
 
 public class Main {
     private static Map<Integer, Employee> employees = new HashMap<>();
@@ -9,46 +7,86 @@ public class Main {
         Scanner input = new Scanner(System.in);
         Random rand = new Random();
 
+        String name;
+
+        while(true){
+
+        // Finding the name of employee
         System.out.print("What is the name of employee?: ");
-        String name = input.nextLine();
+        name = input.nextLine();
 
-        System.out.print("What is the salary of employee?: ");
-        double salary = input.nextDouble();
+        if(name instanceof String){
+            System.out.println("Empolyee: " + name);
+        }
+        else{
+            System.out.println("Incorrect input, Please enter a string.");
+            System.out.print("What is the name of employee?: ");
+            input.nextLine();
+        }
 
-        System.out.print("Hours Worked?: ");
-        int hours = input.nextInt();
+        // Finding the salary of employee
+        System.out.print("Enter the salary of employee?: ");
+        double salary;
 
-        System.out.print("What is the deduction percentage(in decimals):? ");
-        double percentage = input.nextDouble();
+        if(!input.hasNextDouble()){
+            System.out.println("Incorrect input, Please enter a double type.");
+            System.out.print("Enter the salary of employee?: ");
+            input.next();
+        }
+        salary = input.nextDouble();
+        System.out.println("Salary of employee: " + salary);
+
+        //Finding out hours 
+        System.out.print("Enter the employees hours?: ");
+        int hours;
+        if(!input.hasNextInt()){
+            System.out.println("Incorrect input. Please enter an integer.");
+            System.out.print("Enter the employees hours?: ");
+            input.next();
+        }
+        hours = input.nextInt();
+        System.out.println("hours worked: " + hours);
+
+        // Finding the deductions and taxes on salary
+        System.out.print("Enter the deduction percentage(in decimals)?: ");
+        double percentage;
+
+        if(!input.hasNextDouble()){
+            System.out.println("Incorrect input, Please enter a double type.");
+            System.out.print("Enter the deduction percentage(in decimals)?: ");
+            input.next();
+        }
+        percentage = input.nextDouble();
+        System.out.println("Deductions and Taxes: " + percentage);
 
         double deduct = salary * percentage;
         double netpay = salary - deduct;
 
-        Random random = new Random();
-        int id = random.nextInt(0,1000);
+        int id = rand.nextInt(0,1000);
 
         Employee emp = new Employee(name, id, hours);
         emp.addPayslip(new Payslip(new Date(), salary, deduct, netpay));
 
-        Employee emp2 = new Employee("Jane Doe", 102, 29);
-        emp2.addPayslip(new Payslip(new Date(), 3200.00, 550.00, 2650.00));
 
         employees.put(emp.getId(), emp);
-        employees.put(emp2.getId(), emp2);
 
         List<Payslip> payslips = viewPayslips(emp.getId());
-        List<Payslip> payslips1 = viewPayslips(emp2.getId());
 
         for (Payslip p : payslips) {
             emp.displayEmployee();
             p.displayPayslip();
             System.out.println();
         }
-        for(Payslip p1 : payslips1) {
-            emp2.displayEmployee();
-            p1.displayPayslip();
+
+        System.out.print("Do you want to run the program again? (yes/no): ");
+        String userInput = input.nextLine().toLowerCase();
+        if (!userInput.equals("yes")) {
+            break;
         }
     }
+    input.close();
+
+}
 
     public static List<Payslip> viewPayslips(int employeeId) {
         if (employees.containsKey(employeeId)) {
